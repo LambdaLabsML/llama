@@ -118,12 +118,12 @@ def main(
 
     while True:
         if world_rank == 0:
-            # prompt = input("Prompt >>> ")
-            # while not prompt:
-            #     print('Prompt should not be empty!')
-            #     prompt = input("Prompt >>> ")
+            prompt = input("Prompt >>> ")
+            while not prompt:
+                print('Prompt should not be empty!')
+                prompt = input("Prompt >>> ")
             # tensor = torch.tensor([ord(c) for c in prompt])
-            prompt = "hello world"
+            # prompt = "hello world"
             tensor = torch.tensor([ord(c) for c in prompt])
             # tensor = torch.tensor(100.0)
             tensor = tensor.to(device)
