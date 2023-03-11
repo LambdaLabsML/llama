@@ -134,7 +134,7 @@ def main(
         else:
             tensor = torch.ones(256) * -1.0
             tensor = tensor.to(device)
-            while tensor[0] < 0:
+            while tensor[0] < 1:
                 dist.recv(tensor=tensor, src=0)
 
             print(tensor)
