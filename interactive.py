@@ -131,7 +131,7 @@ def main(
             for rank_recv in range(1, world_size):
                 dist.recv(tensor=tensor, src=rank_recv)
                 # prompt = ''.join([chr(int(x)) for x in tensor])
-                print('Received prompt {} from Rank {}\n'.format(prompt, rank_recv))
+                # print('Received prompt {} from Rank {}\n'.format(prompt, rank_recv))
         else:
             # size = (None)
             # tensor = torch.Tensor(*size)
@@ -144,29 +144,29 @@ def main(
             # prompt = ''.join([chr(int(x)) for x in tensor])
             # print('Rank {} has received prompt {}\n'.format(world_rank, prompt))
 
-        i = 0
-        while i < count or count <= 0:
-            i += 1
-            print(f"\n============== sample {i} =================\n")
-            width = 0
-            def callback(text):
-                nonlocal width
-                text = text.replace('\n', '\n\n')
-                chars = []
-                for i, c in enumerate(text):
-                    if c == ' ' and width >= 60:
-                        chars.append('\n')
-                        width = 0
-                    else:
-                        width += 1
-                        chars.append(c)
-                        if c == '\n':
-                            width = 0
-                text = ''.join(chars)
-                print(text, end='', flush=True)
-            text, = generator.generate(
-                [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
-            )
+        # i = 0
+        # while i < count or count <= 0:
+        #     i += 1
+        #     print(f"\n============== sample {i} =================\n")
+        #     width = 0
+        #     def callback(text):
+        #         nonlocal width
+        #         text = text.replace('\n', '\n\n')
+        #         chars = []
+        #         for i, c in enumerate(text):
+        #             if c == ' ' and width >= 60:
+        #                 chars.append('\n')
+        #                 width = 0
+        #             else:
+        #                 width += 1
+        #                 chars.append(c)
+        #                 if c == '\n':
+        #                     width = 0
+        #         text = ''.join(chars)
+        #         print(text, end='', flush=True)
+        #     text, = generator.generate(
+        #         [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
+        #     )
 
 
 if __name__ == "__main__":
