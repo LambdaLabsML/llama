@@ -116,20 +116,20 @@ def main(
         ckpt_dir, tokenizer_path, local_rank, world_rank, world_size, max_seq_len, max_batch_size
     )
 
-    while True:
-        tensor = torch.zeros(1)
-        
-        # Need to put tensor on a GPU device for nccl backend
-        device = torch.device("cuda:{}".format(local_rank))
-        tensor = tensor.to(device)
+    # while True:
+    tensor = torch.zeros(1)
+    
+    # Need to put tensor on a GPU device for nccl backend
+    device = torch.device("cuda:{}".format(local_rank))
+    tensor = tensor.to(device)
 
-        if world_rank == 0:
-            for rank_recv in range(1, world_size):
-                dist.send(tensor=tensor, dst=rank_recv)
-                print('Rank {} sent data to Rank {}\n'.format(0, rank_recv))
-        else:
-            dist.recv(tensor=tensor, src=0)
-            print('Rank {} has received data from rank {}\n'.format(world_rank, 0))
+    if world_rank == 0:
+        for rank_recv in range(1, world_size):
+            dist.send(tensor=tensor, dst=rank_recv)
+            print('Rank {} sent data to Rank {}\n'.format(0, rank_recv))
+    else:
+        dist.recv(tensor=tensor, src=0)
+        print('Rank {} has received data from rank {}\n'.format(world_rank, 0))
 
 if __name__ == "__main__":
     fire.Fire(main)
