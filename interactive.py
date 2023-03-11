@@ -118,30 +118,32 @@ def main(
 
     while True:
         if world_rank == 0:
-            prompt = input("Prompt >>> ")
-            while not prompt:
-                print('Prompt should not be empty!')
-                prompt = input("Prompt >>> ")
-            tensor = torch.tensor([ord(c) for c in prompt])
+            # prompt = input("Prompt >>> ")
+            # while not prompt:
+            #     print('Prompt should not be empty!')
+            #     prompt = input("Prompt >>> ")
+            # tensor = torch.tensor([ord(c) for c in prompt])
+            tensor = torch.tensor(100.0)
             tensor = tensor.to(device)
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
                 print('Sending prompt to Rank {}\n'.format(rank_recv))
             for rank_recv in range(1, world_size):
                 dist.recv(tensor=tensor, src=rank_recv)
-                prompt = ''.join([chr(int(x)) for x in tensor])
+                # prompt = ''.join([chr(int(x)) for x in tensor])
                 print('Received prompt {} from Rank {}\n'.format(prompt, rank_recv))
         else:
-            size = (None)
-            tensor = torch.Tensor(*size)
+            # size = (None)
+            # tensor = torch.Tensor(*size)
+            tensor = torch.tensor(-1.0)
             tensor = tensor.to(device)
             prompt = None
             while not prompt:
                 time.sleep(1)
                 dist.recv(tensor=tensor, src=0)
             dist.send(tensor=tensor, dst=0)
-            prompt = ''.join([chr(int(x)) for x in tensor])
-            print('Rank {} has received prompt {}\n'.format(world_rank, prompt))
+            # prompt = ''.join([chr(int(x)) for x in tensor])
+            # print('Rank {} has received prompt {}\n'.format(world_rank, prompt))
 
         i = 0
         while i < count or count <= 0:
