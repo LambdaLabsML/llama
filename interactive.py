@@ -132,7 +132,7 @@ def main(
                 prompt = ''.join([chr(int(x)) for x in tensor])
                 print('Received prompt {} from Rank {}\n'.format(prompt, rank_recv))
         else:
-            tensor = torch.Tensor()
+            tensor = torch.zeros(100)
             tensor = tensor.to(device)
             prompt = None
             while tensor.numel() == 0:
