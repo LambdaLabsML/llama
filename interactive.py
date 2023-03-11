@@ -137,6 +137,7 @@ def main(
             while tensor[0] < 0:
                 dist.recv(tensor=tensor, src=0)
 
+            print(tensor)
             prompt = ''.join([chr(int(x)) for x in tensor])
             print('Received prompt {} from Rank {}\n'.format(prompt, 0))
 
