@@ -125,6 +125,7 @@ def main(
             while not prompt:
                 print('Prompt should not be empty!')
                 prompt = input("Prompt >>> ")
+            prompt = prompt[:max_prompt_len]
             for i, c in enumerate(prompt):
                 tensor[i] = ord(c)
             for rank_recv in range(1, world_size):
