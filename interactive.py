@@ -123,19 +123,21 @@ def main(
             #     print('Prompt should not be empty!')
             #     prompt = input("Prompt >>> ")
             # tensor = torch.tensor([ord(c) for c in prompt])
-            tensor = torch.tensor(100.0)
+            prompt = "hello world"
+            tensor = torch.tensor([ord(c) for c in prompt])
+            # tensor = torch.tensor(100.0)
             tensor = tensor.to(device)
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
                 print('Sending prompt to Rank {}\n'.format(rank_recv))
             for rank_recv in range(1, world_size):
                 dist.recv(tensor=tensor, src=rank_recv)
-                # prompt = ''.join([chr(int(x)) for x in tensor])
-                # print('Received prompt {} from Rank {}\n'.format(prompt, rank_recv))
+                new_prompt = ''.join([chr(int(x)) for x in tensor])
+                print('Received prompt {} from Rank {}\n'.format(new_prompt, rank_recv))
+                # print('Received tensor {} from Rank {}\n'.format(tensor, rank_recv))
         else:
-            # size = (None)
-            # tensor = torch.Tensor(*size)
-            tensor = torch.tensor(-1.0)
+            tensor = torch.Tensor()
+            # tensor = torch.tensor(-1.0)
             tensor = tensor.to(device)
             # prompt = None
             # while not prompt:
