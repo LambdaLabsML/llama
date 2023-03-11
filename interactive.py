@@ -94,8 +94,8 @@ def main(
 ):
     local_rank, world_rank, world_size = setup_model_parallel(seed)
     device = torch.device("cuda:{}".format(local_rank))
-    if world_rank > 0:
-        sys.stdout = open(os.devnull, "w")
+    # if world_rank > 0:
+    #     sys.stdout = open(os.devnull, "w")
 
     print("\n")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
