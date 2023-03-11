@@ -118,12 +118,15 @@ def main(
 
     while True:
         if world_rank == 0:
-            prompt = input("Prompt >>> ")
-            while not prompt:
-                print('Prompt should not be empty!')
-                prompt = input("Prompt >>> ")
+            # prompt = input("Prompt >>> ")
+            # while not prompt:
+            #     print('Prompt should not be empty!')
+            #     prompt = input("Prompt >>> ")
+            
+            prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
             tensor = torch.tensor([ord(c) for c in prompt])
             tensor = tensor.to(device)
+
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
                 print('Sending prompt to Rank {}\n'.format(rank_recv))
@@ -134,9 +137,7 @@ def main(
         else:
             tensor = torch.ones(256) * -1.0
             tensor = tensor.to(device)
-            while tensor[0] < 1:
-                dist.recv(tensor=tensor, src=0)
-
+            dist.recv(tensor=tensor, src=0)
             print(tensor)
             prompt = ''.join([chr(int(x)) for x in tensor])
             print('Received prompt {} from Rank {}\n'.format(prompt, 0))
