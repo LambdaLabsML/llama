@@ -127,16 +127,17 @@ def main(
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
                 print('Sending prompt to Rank {}\n'.format(rank_recv))
-            for rank_recv in range(1, world_size):
-                dist.recv(tensor=tensor, src=rank_recv)
-                recv_prompt = ''.join([chr(int(x)) for x in tensor])
-                print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
+            # for rank_recv in range(1, world_size):
+            #     dist.recv(tensor=tensor, src=rank_recv)
+            #     recv_prompt = ''.join([chr(int(x)) for x in tensor])
+            #     print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
         else:
             tensor = torch.empty(256)
             tensor = tensor.to(device)
             dist.recv(tensor=tensor, src=0)
-            dist.send(tensor=tensor, dst=0)
+            # dist.send(tensor=tensor, dst=0)
             prompt = ''.join([chr(int(x)) for x in tensor])
+            print('Received prompt {} from Rank {}\n'.format(prompt, 0))
 
         # prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
 
