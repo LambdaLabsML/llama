@@ -117,28 +117,29 @@ def main(
     )
 
     while True:
-        if world_rank == 0:
-            prompt = input("Prompt >>> ")
-            while not prompt:
-                print('Prompt should not be empty!')
-                prompt = input("Prompt >>> ")
-            tensor = torch.tensor([ord(c) for c in prompt])
-            tensor = tensor.to(device)
-            for rank_recv in range(1, world_size):
-                dist.send(tensor=tensor, dst=rank_recv)
-                print('Sending prompt to Rank {}\n'.format(rank_recv))
-            for rank_recv in range(1, world_size):
-                dist.recv(tensor=tensor, src=rank_recv)
-                recv_prompt = ''.join([chr(int(x)) for x in tensor])
-                print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
-        else:
-            tensor = torch.empty(256)
-            tensor = tensor.to(device)
-            dist.recv(tensor=tensor, src=0)
-            dist.send(tensor=tensor, dst=0)
-            prompt = ''.join([chr(int(x)) for x in tensor])
+        # if world_rank == 0:
+        #     prompt = input("Prompt >>> ")
+        #     while not prompt:
+        #         print('Prompt should not be empty!')
+        #         prompt = input("Prompt >>> ")
+        #     tensor = torch.tensor([ord(c) for c in prompt])
+        #     tensor = tensor.to(device)
+        #     for rank_recv in range(1, world_size):
+        #         dist.send(tensor=tensor, dst=rank_recv)
+        #         print('Sending prompt to Rank {}\n'.format(rank_recv))
+        #     for rank_recv in range(1, world_size):
+        #         dist.recv(tensor=tensor, src=rank_recv)
+        #         recv_prompt = ''.join([chr(int(x)) for x in tensor])
+        #         print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
+        # else:
+        #     tensor = torch.empty(256)
+        #     tensor = tensor.to(device)
+        #     dist.recv(tensor=tensor, src=0)
+        #     dist.send(tensor=tensor, dst=0)
+        #     prompt = ''.join([chr(int(x)) for x in tensor])
 
-
+        prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
+        
         i = 0
         while i < count or count <= 0:
             i += 1
