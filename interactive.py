@@ -137,9 +137,9 @@ def main(
             # tensor = torch.Tensor(*size)
             tensor = torch.tensor(-1.0)
             tensor = tensor.to(device)
-            prompt = None
-            while not prompt:
-                dist.recv(tensor=tensor, src=0)
+            # prompt = None
+            # while not prompt:
+            dist.recv(tensor=tensor, src=0)
             dist.send(tensor=tensor, dst=0)
             # prompt = ''.join([chr(int(x)) for x in tensor])
             # print('Rank {} has received prompt {}\n'.format(world_rank, prompt))
