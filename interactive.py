@@ -139,7 +139,6 @@ def main(
             tensor = tensor.to(device)
             prompt = None
             while not prompt:
-                time.sleep(1)
                 dist.recv(tensor=tensor, src=0)
             dist.send(tensor=tensor, dst=0)
             # prompt = ''.join([chr(int(x)) for x in tensor])
