@@ -136,7 +136,7 @@ def main(
                 print('Received prompt {} from Rank {}\n'.format(new_prompt, rank_recv))
                 # print('Received tensor {} from Rank {}\n'.format(tensor, rank_recv))
         else:
-            tensor = torch.Tensor()
+            tensor = torch.empty(100)
             # tensor = torch.tensor(-1.0)
             tensor = tensor.to(device)
             # prompt = None
