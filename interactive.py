@@ -132,10 +132,11 @@ def main(
             #     recv_prompt = ''.join([chr(int(x)) for x in tensor])
             #     print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
         else:
-            tensor = torch.empty(256)
+            tensor = torch.ones(256) * -1.0
             tensor = tensor.to(device)
-            dist.recv(tensor=tensor, src=0)
-            # dist.send(tensor=tensor, dst=0)
+            while tensor[0] < 0:
+                dist.recv(tensor=tensor, src=0)
+
             prompt = ''.join([chr(int(x)) for x in tensor])
             print('Received prompt {} from Rank {}\n'.format(prompt, 0))
 
