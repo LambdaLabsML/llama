@@ -129,13 +129,14 @@ def main(
                 print('Sending prompt to Rank {}\n'.format(rank_recv))
             for rank_recv in range(1, world_size):
                 dist.recv(tensor=tensor, src=rank_recv)
-                new_prompt = ''.join([chr(int(x)) for x in tensor])
-                print('Received prompt {} from Rank {}\n'.format(new_prompt, rank_recv))
+                recv_prompt = ''.join([chr(int(x)) for x in tensor])
+                print('Received prompt {} from Rank {}\n'.format(recv_prompt, rank_recv))
         else:
             tensor = torch.empty(256)
             tensor = tensor.to(device)
             dist.recv(tensor=tensor, src=0)
             dist.send(tensor=tensor, dst=0)
+            prompt = ''.join([chr(int(x)) for x in tensor])
 
 
         i = 0
