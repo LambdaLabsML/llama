@@ -122,10 +122,7 @@ def main(
             while not prompt:
                 print('Prompt should not be empty!')
                 prompt = input("Prompt >>> ")
-            # tensor = torch.tensor([ord(c) for c in prompt])
-            # prompt = "hello world"
             tensor = torch.tensor([ord(c) for c in prompt])
-            # tensor = torch.tensor(100.0)
             tensor = tensor.to(device)
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
@@ -134,41 +131,36 @@ def main(
                 dist.recv(tensor=tensor, src=rank_recv)
                 new_prompt = ''.join([chr(int(x)) for x in tensor])
                 print('Received prompt {} from Rank {}\n'.format(new_prompt, rank_recv))
-                # print('Received tensor {} from Rank {}\n'.format(tensor, rank_recv))
         else:
-            tensor = torch.empty(100)
-            # tensor = torch.tensor(-1.0)
+            tensor = torch.empty(256)
             tensor = tensor.to(device)
-            # prompt = None
-            # while not prompt:
             dist.recv(tensor=tensor, src=0)
             dist.send(tensor=tensor, dst=0)
-            # prompt = ''.join([chr(int(x)) for x in tensor])
-            # print('Rank {} has received prompt {}\n'.format(world_rank, prompt))
 
-        # i = 0
-        # while i < count or count <= 0:
-        #     i += 1
-        #     print(f"\n============== sample {i} =================\n")
-        #     width = 0
-        #     def callback(text):
-        #         nonlocal width
-        #         text = text.replace('\n', '\n\n')
-        #         chars = []
-        #         for i, c in enumerate(text):
-        #             if c == ' ' and width >= 60:
-        #                 chars.append('\n')
-        #                 width = 0
-        #             else:
-        #                 width += 1
-        #                 chars.append(c)
-        #                 if c == '\n':
-        #                     width = 0
-        #         text = ''.join(chars)
-        #         print(text, end='', flush=True)
-        #     text, = generator.generate(
-        #         [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
-        #     )
+
+        i = 0
+        while i < count or count <= 0:
+            i += 1
+            print(f"\n============== sample {i} =================\n")
+            width = 0
+            def callback(text):
+                nonlocal width
+                text = text.replace('\n', '\n\n')
+                chars = []
+                for i, c in enumerate(text):
+                    if c == ' ' and width >= 60:
+                        chars.append('\n')
+                        width = 0
+                    else:
+                        width += 1
+                        chars.append(c)
+                        if c == '\n':
+                            width = 0
+                text = ''.join(chars)
+                print(text, end='', flush=True)
+            text, = generator.generate(
+                [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
+            )
 
 
 if __name__ == "__main__":
