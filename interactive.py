@@ -159,7 +159,7 @@ def main(
             text, = generator.generate(
                 [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
             )
-
+            print(f"\n============== end sample {i} =================\n")
 
 if __name__ == "__main__":
     fire.Fire(main)
