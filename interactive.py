@@ -122,10 +122,11 @@ def main(
             # while not prompt:
             #     print('Prompt should not be empty!')
             #     prompt = input("Prompt >>> ")
-            
+
             prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
             tensor = torch.tensor([ord(c) for c in prompt])
             tensor = tensor.to(device)
+            print(tensor)
 
             for rank_recv in range(1, world_size):
                 dist.send(tensor=tensor, dst=rank_recv)
