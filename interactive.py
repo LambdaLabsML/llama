@@ -118,12 +118,12 @@ def main(
 
     while True:
         if world_rank == 0:
-            # prompt = input("Prompt >>> ")
-            # while not prompt:
-            #     print('Prompt should not be empty!')
-            #     prompt = input("Prompt >>> ")
+            prompt = input("Prompt >>> ")
+            while not prompt:
+                print('Prompt should not be empty!')
+                prompt = input("Prompt >>> ")
             tensor = torch.ones(256) * -1.0
-            prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
+            # prompt = "[Scene: Central Perk, Chandler, Joey, Phoebe, and Monica are there.]"
             for i, c in enumerate(prompt):
                 tensor[i] = ord(c)
             # tensor = torch.tensor([ord(c) for c in prompt])
