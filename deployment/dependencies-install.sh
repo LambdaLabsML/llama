@@ -1,0 +1,1 @@
+pip3 install torch==1.13.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116

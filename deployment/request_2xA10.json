@@ -1,0 +1,9 @@
+{
+    "region_name": "us-west-1",
+    "instance_type_name": "gpu_1x_a10",
+    "ssh_key_names": [
+      "name-of-your-cloud-ssh-key"
+    ],
+    "file_system_names": [],
+    "quantity": 2
+  }
