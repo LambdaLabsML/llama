@@ -33,16 +33,18 @@ for IP in ${ALL_IP[*]}; do
     ssh -i $LAMBDA_CLOUD_KEY ubuntu@$IP "if [ ! -d shared ]; then mkdir shared; fi"
 done
 
+cat head-nfs-install.sh | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${HEAD_IP}
+
 for IP in ${WORKER_IP[*]}; do
     ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "echo '/home/ubuntu/shared ${IP}(rw,sync,no_subtree_check)' | sudo tee -a /etc/exports"
 done
-
-cat head-nfs-install.sh | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${HEAD_IP}
-echo "NFS set up on the head node"
+ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "sudo systemctl restart nfs-kernel-server"
+# echo "NFS set up on the head node"
 
 for IP in ${WORKER_IP[*]}; do
-    ssh -i $LAMBDA_CLOUD_KEY ubuntu@$IP "sudo mount $HEAD_IP:/home/ubuntu/shared /home/ubuntu/shared"
+    ssh -i $LAMBDA_CLOUD_KEY ubuntu@$IP "sudo mount ${HEAD_IP}:/home/ubuntu/shared /home/ubuntu/shared"
 done
+
 echo "NFS set up on the worker nodes"
 
 echo "Clone repos into NFS ------------------------------"
