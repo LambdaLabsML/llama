@@ -33,24 +33,25 @@ for IP in ${ALL_IP[*]}; do
     ssh -i $LAMBDA_CLOUD_KEY ubuntu@$IP "if [ ! -d shared ]; then mkdir shared; fi"
 done
 
-CMD_HEAD="WORKER_IP=$WORKER_IP && "
-CMD_HEAD+=$(cat head-nfs-install.sh)
-echo $CMD_HEAD | sed "s/ [\\]//g"
-echo $CMD_HEAD | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${HEAD_IP}
+for IP in ${WORKER_IP[*]}; do
+    ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "echo '/home/ubuntu/shared ${IP}(rw,sync,no_subtree_check)' | sudo tee -a /etc/exports"
+done
+
+cat head-nfs-install.sh | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${HEAD_IP}
+echo "NFS set up on the head node"
 
 for IP in ${WORKER_IP[*]}; do
-    CMD_WORKER="HEAD_IP=$HEAD_IP && "
-    CMD_WORKER+=$(cat workers-nfs-install.sh)
-    echo $CMD_WORKER | sed "s/ [\\]//g"
-    echo $CMD_WORKER | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${IP}
+    ssh -i $LAMBDA_CLOUD_KEY ubuntu@$IP "sudo mount $HEAD_IP:/home/ubuntu/shared /home/ubuntu/shared"
 done
+echo "NFS set up on the worker nodes"
 
 echo "Clone repos into NFS ------------------------------"
 ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "if [ ! -d /home/ubuntu/shared/llama ]; then git clone https://github.com/LambdaLabsML/llama.git /home/ubuntu/shared/llama; fi"
 ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "if [ ! -d /home/ubuntu/shared/llama-dl ]; then git clone https://github.com/chuanli11/llama-dl.git /home/ubuntu/shared/llama-dl; fi"
 
 echo "Install LLAMA dependencies (asynchronously) ------------------------------"
-CMD_DEPENDENCIES=$(cat dependencies-install.sh)
-for IP in ${ALL_IP[*]}; do echo $CMD_DEPENDENCIES | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${IP} & done
+for IP in ${ALL_IP[*]}; do cat dependencies-install.sh | ssh -i $LAMBDA_CLOUD_KEY ${IP} & done
+
+wait
 
 echo "All instances are successfully set up 🥳🥳🥳🥳🥳🥳🥳🥳"
