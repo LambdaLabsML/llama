@@ -36,4 +36,25 @@ NOTE: `setup_nodes.sh` will ask you to type `yes` and hit `enter` a few times. A
 
 ### Step three: download pre-trained ckpts
 
+From the head instance, run this command to download the ckpts (here we use 13B as an example)
+
+```
+cd /home/ubuntu/shared/llama-dl && ./llama.sh 13B
+```
+
 ### Step four: run LLAMA
+
+From the head instance, run this command to run 13B model inference with two nodes.
+
+```
+mpirun -np 2 \
+-H master-ip:1,worker-ip:1 \
+-x MASTER_ADDR=master-ip \
+-x MASTER_PORT=1234 \
+-x PATH \
+-bind-to none -map-by slot \
+-mca pml ob1 -mca btl ^openib \
+python /home/ubuntu/shared/llama/interactive.py \
+--ckpt_dir /home/ubuntu/shared/llama-dl/13B \
+--tokenizer_path /home/ubuntu/shared/llama-dl/tokenizer.model
+```
