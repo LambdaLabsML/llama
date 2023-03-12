@@ -157,10 +157,13 @@ def main(
                             width = 0
                 text = ''.join(chars)
                 print(text, end='', flush=True)
-            text, = generator.generate(
+            start_time = time.time()
+            text, num_gen_tokens = generator.generate(
                 [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
             )
             print(f"\n============== end sample {i} =================\n")
+            sec = time.time() - start_time
+            print(f"{num_gen_tokens} tokens generated in {sec:.2f} seconds, average tokens/sec: {num_gen_tokens / sec:.2f}")
 
 if __name__ == "__main__":
     fire.Fire(main)

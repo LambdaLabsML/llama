@@ -84,7 +84,7 @@ class LLaMA:
                 token_callback(next_word)
             prev_pos = cur_pos
 
-        return self.decode(tokens)
+        return self.decode(tokens), cur_pos - start_pos
 
     def decode(self, tokens):
         decoded = []

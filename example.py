@@ -138,7 +138,7 @@ def main(
                             width = 0
                 text = ''.join(chars)
                 print(text, end='', flush=True)
-            text, = generator.generate(
+            text, num_gen_tokens = generator.generate(
                 [prompt], max_gen_len=max_gen_len, temperature=temperature, top_p=top_p, top_k=top_k, repetition_penalty=repetition_penalty, token_callback=callback, eos_w=eos_w
             )
 
