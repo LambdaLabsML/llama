@@ -49,8 +49,8 @@ echo "Clone repos into NFS ------------------------------"
 ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "if [ ! -d /home/ubuntu/shared/llama ]; then git clone https://github.com/LambdaLabsML/llama.git /home/ubuntu/shared/llama; fi"
 ssh -i $LAMBDA_CLOUD_KEY ubuntu@$HEAD_IP "if [ ! -d /home/ubuntu/shared/llama-dl ]; then git clone https://github.com/chuanli11/llama-dl.git /home/ubuntu/shared/llama-dl; fi"
 
-echo "Install LLAMA dependencies ------------------------------"
+echo "Install LLAMA dependencies (asynchronously) ------------------------------"
 CMD_DEPENDENCIES=$(cat dependencies-install.sh)
-for IP in ${ALL_IP[*]}; do
-    echo $CMD_DEPENDENCIES | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${IP}
-done
+for IP in ${ALL_IP[*]}; do echo $CMD_DEPENDENCIES | sed "s/ [\\]//g" | ssh -i $LAMBDA_CLOUD_KEY ${IP} & done
+
+echo "All instances are successfully set up 🥳🥳🥳🥳🥳🥳🥳🥳"
